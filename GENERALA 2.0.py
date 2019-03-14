@@ -32,34 +32,38 @@ def elegir_reroll(tirada):
         tirada[dado - 1] = rnd.randint(1, 6)
     return tirada
 
+def tachar(eleccion):
+    return grilla.append(str(elecciones[eleccion]) + ': 0')
+
+def sumar(eleccion):
+    return grilla.append(str(elecciones[eleccion]) + ': ' + int(puntos[eleccion]))
+
 def elegir(eleccion):
-    if eleccion in elecciones.keys:
+    opcion = input('Elegi gd: Generala Doble g: Generala, p: Poker, f: Full, e: Escalera, 1: Unos, 2: Dos, 3: Tres, 4: Cuatros, 5: Cincos, 6: Seis\n')
 
-
-def opciones(tirada):
-    if es_generala(tirada):
-        grilla.append(Generala)
+    if eleccion == 't':
+        tachar(opcion)
+        return print(grilla)
+    elif eleccion == 'a':
+        sumar(opcion)
         print(grilla)
+    else:
+        return
 
-    if es_full(tirada):
-        print("salio full")
 
-    if es_poker(tirada):
-        print("salio poker")
-
-    if es_escalera(tirada):
-        print("salio escalera")
-
+grilla = []
 
 tirada = []
 for i in range(1, 6):
     tirada.append(rnd.randint(1, 6))
 
+
 puntos = {}
-puntos['Generala doble'] = 60
-puntos['Generala'] = 50
-puntos['Poker'] = 45
-puntos['Full'] = 35
+puntos['gd'] = 60
+puntos['g'] = 50
+puntos['p'] = 45
+puntos['f'] = 35
+puntos['e'] = 25
 puntos['6'] = tirada.count(6) * 6
 puntos['5'] = tirada.count(5) * 5
 puntos['4'] = tirada.count(4) * 4
@@ -80,30 +84,19 @@ elecciones['p'] = 'Poker'
 elecciones['g'] = 'Generala'
 elecciones['gd'] = 'Generala Doble'
 
-tirada = tirar(tirada)
+while len(grilla) <= 10:
 
-for i in range(0,2):
-    tirada = elegir_reroll(tirada)
+
     tirada = tirar(tirada)
 
+    for i in range(0,2):
+        tirada = elegir_reroll(tirada)
+        tirada = tirar(tirada)
 
-if es_generala(tirada):
+    eleccion = input('t: tachar, a: agregar\n')
+       
+    primera = elegir(eleccion)
 
-    print("salio generala")
-
-if es_full(tirada):
-
-    print("salio full")
-
-if es_poker(tirada):
-
-    print("salio poker")
-
-if es_escalera(tirada):
-
-    print("salio escalera")
-
-
-eleccion = input('Elegi g: Generala, p: Poker, f: Full, e: Escalera, 1: Unos, 2: Dos, 3: Tres, 4: Cuatros, 5: Cincos, 6: Seis\n')
-
-
+    tirada.clear()
+    for i in range(1, 6):
+        tirada.append(rnd.randint(1, 6))
