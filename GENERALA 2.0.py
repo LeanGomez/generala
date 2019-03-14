@@ -36,55 +36,43 @@ def tachar(eleccion):
     return grilla.append(str(elecciones[eleccion]) + ': 0')
 
 def sumar(eleccion):
-    return grilla.append(str(elecciones[eleccion]) + ': ' + int(puntos[eleccion]))
+    return grilla.append(str(elecciones[eleccion]) + ': ' + str(puntos[eleccion]))
+
+def check(eleccion):
+    if eleccion == 'g':
+        return es_generala(tirada)
+    elif eleccion == 'p':
+        return es_poker(tirada)
+    elif eleccion == 'f':
+        return es_full(tirada)
+    elif eleccion == 'e':
+        return es_escalera(tirada)
+    else:
+        return True
 
 def elegir(eleccion):
     opcion = input('Elegi gd: Generala Doble g: Generala, p: Poker, f: Full, e: Escalera, 1: Unos, 2: Dos, 3: Tres, 4: Cuatros, 5: Cincos, 6: Seis\n')
-
+    validar = check(opcion)
     if eleccion == 't':
         tachar(opcion)
         return print(grilla)
-    elif eleccion == 'a':
-        sumar(opcion)
-        print(grilla)
+    elif eleccion == 'a' and validar == True:
+         sumar(opcion)
+         return print(grilla)
+    elif eleccion =='a' and validar == False:
+        tachar(opcion)
+        return print(grilla)
     else:
-        return
+        return print('Te haz equivocado')
 
 
 grilla = []
 
 tirada = []
-for i in range(1, 6):
-    tirada.append(rnd.randint(1, 6))
-
-
-puntos = {}
-puntos['gd'] = 60
-puntos['g'] = 50
-puntos['p'] = 45
-puntos['f'] = 35
-puntos['e'] = 25
-puntos['6'] = tirada.count(6) * 6
-puntos['5'] = tirada.count(5) * 5
-puntos['4'] = tirada.count(4) * 4
-puntos['3'] = tirada.count(3) * 3
-puntos['2'] = tirada.count(2) * 2
-puntos['1'] = tirada.count(1) * 1
-
-elecciones = {}
-elecciones['1'] = 'Unos'
-elecciones['2'] = 'Dos'
-elecciones['3'] = 'Tres'
-elecciones['4'] = 'Cuatros'
-elecciones['5'] = 'Cincos'
-elecciones['6'] = 'Seis'
-elecciones['e'] = 'Escalera'
-elecciones['f'] = 'Full'
-elecciones['p'] = 'Poker'
-elecciones['g'] = 'Generala'
-elecciones['gd'] = 'Generala Doble'
 
 while len(grilla) <= 10:
+    for i in range(1, 6):
+        tirada.append(rnd.randint(1, 6))
 
 
     tirada = tirar(tirada)
@@ -93,10 +81,39 @@ while len(grilla) <= 10:
         tirada = elegir_reroll(tirada)
         tirada = tirar(tirada)
 
-    eleccion = input('t: tachar, a: agregar\n')
-       
+    puntos = {}
+    puntos['gd'] = 60
+    puntos['g'] = 50
+    puntos['p'] = 45
+    puntos['f'] = 35
+    puntos['e'] = 25
+    puntos['6'] = tirada.count(6) * 6
+    puntos['5'] = tirada.count(5) * 5
+    puntos['4'] = tirada.count(4) * 4
+    puntos['3'] = tirada.count(3) * 3
+    puntos['2'] = tirada.count(2) * 2
+    puntos['1'] = tirada.count(1) * 1
+
+    elecciones = {}
+    elecciones['1'] = 'Unos'
+    elecciones['2'] = 'Dos'
+    elecciones['3'] = 'Tres'
+    elecciones['4'] = 'Cuatros'
+    elecciones['5'] = 'Cincos'
+    elecciones['6'] = 'Seis'
+    elecciones['e'] = 'Escalera'
+    elecciones['f'] = 'Full'
+    elecciones['p'] = 'Poker'
+    elecciones['g'] = 'Generala'
+    elecciones['gd'] = 'Generala Doble'
+
+    while True:
+        eleccion = input('t: tachar, a: agregar\n')
+        if eleccion == 'a' or eleccion == 't':
+            break
+
     primera = elegir(eleccion)
 
     tirada.clear()
-    for i in range(1, 6):
-        tirada.append(rnd.randint(1, 6))
+
+
