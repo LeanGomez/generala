@@ -1,6 +1,7 @@
 import random as rnd
 
-
+def es_generala_doble(tirada):
+    return es_generala(tirada) and grilla.count(('generala',50)) == 1
 def es_generala(tirada):  # dice si una tirada ORDENADA es una generala
     return tirada[0] == tirada[4]
 
@@ -15,10 +16,10 @@ def es_full(tirada):  # dice si una tirada ORDENADA es un full
 
 
 def es_escalera(tirada):  # dice si una tirada ORDENADA es una escalera
-    return tirada == [1, 2, 3, 4, 5] or tirada == [2, 3, 4, 5, 6] or tirada == [3, 4, 5, 6, 1]
+    return tirada == [1, 2, 3, 4, 5] or tirada == [2, 3, 4, 5, 6] or tirada == [1, 3, 4, 5, 6]
 
 
-def tirar(tirada):
+def tirar(tirada): # Ordena los dados
     tirada = sorted(tirada)
     input('presiona ENTER para tirar los dados')
     print(tirada)
@@ -26,21 +27,22 @@ def tirar(tirada):
     return tirada
 
 
-def elegir_reroll(tirada):
+def elegir_reroll(tirada): # elije que dados cambian
     reroll = map(int, input("ingrese los numeros de los dados que quiere volver a tirar\n").strip().split())
     for dado in reroll:
         tirada[dado - 1] = rnd.randint(1, 6)
     return tirada
 
 def tachar(eleccion):
-    return grilla.append(str(elecciones[eleccion]) + ': 0')
-
+    return grilla.append((elecciones[eleccion], 0))
 def sumar(eleccion):
-    return grilla.append(str(elecciones[eleccion]) + ': ' + str(puntos[eleccion]))
+    return grilla.append((elecciones[eleccion], puntos[eleccion]))
 
 def check(eleccion):
     if eleccion == 'g':
         return es_generala(tirada)
+    elif eleccion == 'g':
+        return es_generala_doble(tirada)
     elif eleccion == 'p':
         return es_poker(tirada)
     elif eleccion == 'f':
@@ -51,26 +53,45 @@ def check(eleccion):
         return True
 
 def elegir(eleccion):
-    opcion = input('Elegi gd: Generala Doble g: Generala, p: Poker, f: Full, e: Escalera, 1: Unos, 2: Dos, 3: Tres, 4: Cuatros, 5: Cincos, 6: Seis\n')
+    while True:
+      opcion = input('Elegi gd: Generala Doble g: Generala, p: Poker, f: Full, e: Escalera, 1: Unos, 2: Dos, 3: Tres, 4: Cuatros, 5: Cincos, 6: Seis\n')
+      if opcion == 'gd' or opcion == 'g' or opcion == 'p' or opcion == 'f' or opcion == 'e' or opcion == '1' or opcion == '2' or opcion == '3' or opcion == '4' or opcion == '5' or opcion == '6':
+          break
     validar = check(opcion)
     if eleccion == 't':
         tachar(opcion)
-        return print(grilla)
     elif eleccion == 'a' and validar == True:
          sumar(opcion)
-         return print(grilla)
     elif eleccion =='a' and validar == False:
         tachar(opcion)
-        return print(grilla)
-    else:
-        return print('Te haz equivocado')
+    for juego in grilla:
+        print(juego[0]+': ' + str(juego[1]))
 
 
 grilla = []
 
 tirada = []
+puntos = dict()
+puntos['gd'] = 100
+puntos['g'] = 50
+puntos['p'] = 45
+puntos['f'] = 35
+puntos['e'] = 25
 
-while len(grilla) <= 10:
+elecciones = dict()
+elecciones['1'] = 'Unos'
+elecciones['2'] = 'Dos'
+elecciones['3'] = 'Tres'
+elecciones['4'] = 'Cuatros'
+elecciones['5'] = 'Cincos'
+elecciones['6'] = 'Seis'
+elecciones['e'] = 'Escalera'
+elecciones['f'] = 'Full'
+elecciones['p'] = 'Poker'
+elecciones['g'] = 'Generala'
+elecciones['gd'] = 'Generala Doble'
+
+while len(grilla) <= 11:
     for i in range(1, 6):
         tirada.append(rnd.randint(1, 6))
 
@@ -81,12 +102,6 @@ while len(grilla) <= 10:
         tirada = elegir_reroll(tirada)
         tirada = tirar(tirada)
 
-    puntos = {}
-    puntos['gd'] = 60
-    puntos['g'] = 50
-    puntos['p'] = 45
-    puntos['f'] = 35
-    puntos['e'] = 25
     puntos['6'] = tirada.count(6) * 6
     puntos['5'] = tirada.count(5) * 5
     puntos['4'] = tirada.count(4) * 4
@@ -94,26 +109,17 @@ while len(grilla) <= 10:
     puntos['2'] = tirada.count(2) * 2
     puntos['1'] = tirada.count(1) * 1
 
-    elecciones = {}
-    elecciones['1'] = 'Unos'
-    elecciones['2'] = 'Dos'
-    elecciones['3'] = 'Tres'
-    elecciones['4'] = 'Cuatros'
-    elecciones['5'] = 'Cincos'
-    elecciones['6'] = 'Seis'
-    elecciones['e'] = 'Escalera'
-    elecciones['f'] = 'Full'
-    elecciones['p'] = 'Poker'
-    elecciones['g'] = 'Generala'
-    elecciones['gd'] = 'Generala Doble'
 
     while True:
         eleccion = input('t: tachar, a: agregar\n')
         if eleccion == 'a' or eleccion == 't':
             break
 
-    primera = elegir(eleccion)
-
+    elegir(eleccion)
+    sum = 0
+    for juego in grilla:
+        sum += juego[1]
+    print('Puntaje total: ' + str(sum))
     tirada.clear()
 
 
