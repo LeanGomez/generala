@@ -28,7 +28,10 @@ def tirar(tirada): # Ordena los dados
 
 
 def elegir_reroll(tirada): # elije que dados cambian
-    reroll = map(int, input("ingrese los numeros de los dados que quiere volver a tirar\n").strip().split())
+    while True:
+      reroll = map(int, input("ingrese los numeros de los dados que quiere volver a tirar\n").strip().split())
+      if reroll == 1 or reroll == 2 or reroll == 3 or reroll == 4 or reroll==5 or reroll == 6:
+        break
     for dado in reroll:
         tirada[dado - 1] = rnd.randint(1, 6)
     return tirada
@@ -121,5 +124,3 @@ while len(grilla) <= 11:
         sum += juego[1]
     print('Puntaje total: ' + str(sum))
     tirada.clear()
-
-
